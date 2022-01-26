@@ -8,7 +8,8 @@ defmodule Borsh.MixProject do
       elixir: "~> 1.12",
       start_permanent: Mix.env() == :prod,
       package: package(),
-      description: description()
+      description: description(),
+      deps: deps()
     ]
   end
 
@@ -33,6 +34,12 @@ defmodule Borsh.MixProject do
         "GitHub" => "https://github.com/alexfilatov/borsh",
         "Docs" => "https://hexdocs.pm/borsh"
       }
+    ]
+  end
+
+  defp deps do
+    [
+      {:ex_doc, "~> 0.18", only: :dev}
     ]
   end
 end

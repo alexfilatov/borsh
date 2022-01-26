@@ -40,10 +40,12 @@ defmodule BorshTest do
 
       <<_::binary-size(4), _::binary-size(5), _::binary-size(4), last_name::binary-size(7),
         _::binary>> = bitstr
+
       assert last_name == "Johnson"
 
       <<_::binary-size(4), _::binary-size(5), _::binary-size(4), _::binary-size(7), age::size(8),
         _::binary>> = bitstr
+
       assert age == 14
     end
   end
