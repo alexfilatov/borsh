@@ -91,7 +91,7 @@ defmodule Borsh do
       @spec borsh_encode(obj :: keyword) :: bitstring()
       def borsh_encode(obj) do
         {_, res} =
-          Enum.map_reduce(borsh_schema, [], fn schema_item, acc ->
+          Enum.map_reduce(borsh_schema(), [], fn schema_item, acc ->
             {schema_item, acc ++ [extract_encode_item(obj, schema_item)]}
           end)
 
