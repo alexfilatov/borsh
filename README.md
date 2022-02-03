@@ -2,6 +2,8 @@
 
 BORSH, binary serializer for security-critical projects.
 
+**IMPORTANT! Implemented only `Serialization`. `Deserialization` will be implemented by the end of the March.**
+
 Borsh stands for `Binary` `Object` `Representation` `Serializer` for `Hashing`. It is meant to be used in
 security-critical projects as it prioritizes consistency, safety, speed; and comes with a strict specification.
 
