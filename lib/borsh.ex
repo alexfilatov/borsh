@@ -45,7 +45,7 @@ defmodule Borsh do
   `:borsh` - Struct of the borsh-ed module. The serializer will take this struct and executes struct's module `.borsh_encode`
       against this struct and assign binary result to the literal.
 
-  `[:borsh]` - Enum of borsh-ed structs. Each element of this list of `:borsh` struct is
+  `[:borsh]` - Enum of borsh-ed structs. Each element of this list of `:borsh` struct must have a Borsh schema
 
   `:u64` - Unsigned integer 64-bit size. There are also `:u8`, `:u16`, `:u32` and `:u128`
 

@@ -28,7 +28,7 @@ dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:borsh, "~> 0.1.0"}
+    {:borsh, "~> 0.1"}
   ]
 end
 ```
@@ -44,29 +44,13 @@ end
         receiver_id: :string,
         block_hash: [32],
         actions: [:borsh]
-      ],
-      enum_map: %{
-        0 => EnumElement0,
-        1 => EnumElement1,
-        2 => EnumElement2
-      }
+      ]
 ```
 
 #### Options
 
 `schema`:
 Borsh schema itself, structure of fields for serialisation with serialisation formats.
-
-`enum_map`:
-List of all available enum elements, with indexes in order. It's very important to keep an order of the `enum_map`
-elements as Borsh will be using it for de-serialisation to understand which enum element is which. Currently limited
-only to 1 enum element per structure, further Borsh versions will contain better structured schema with multiple enums,
-e.g.:
-
-```elixir
-  enums1: [%{0 => Enum1Element0, 1 => Enum1Element1}],
-                                      enums2: [%{0 => Enum2Element0, 1 => Enum2Element1}]
-```
 
 #### Borsh literal formats
 
@@ -77,7 +61,7 @@ string byte size
 module `.borsh_encode`
 against this struct and assign binary result to the literal.
 
-[`:borsh`] - Enum of borsh-ed structs. There also should be an `enum_map` to decode each of the enum element
+`[:borsh]` - Enum of borsh-ed structs. Each element of this list of `:borsh` struct must have a Borsh schema
 
 `:u64` - Unsigned integer 64-bit size. There are also `:u8`, `:u16`, `:u32` and `:u128`
 
