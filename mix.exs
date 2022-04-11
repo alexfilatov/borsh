@@ -22,7 +22,7 @@ defmodule Borsh.MixProject do
 
   defp description do
     """
-    Elixir implementation of the BORSH binary serializer.
+    Pure Elixir implementation of the BORSH binary serializer.
     """
   end
 
