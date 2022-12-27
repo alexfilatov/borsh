@@ -64,9 +64,9 @@ defmodule Borsh do
       @doc """
       Encodes objects according to the schema into the bytestring
       """
-      @spec borsh_encode(obj :: keyword) :: bitstring()
+      @spec borsh_encode(obj :: struct) :: bitstring()
       def borsh_encode(obj) do
-        Borsh.Encode.borsh_encode(obj, borsh_schema())
+        Borsh.Encode.borsh_encode(obj)
       end
     end
   end

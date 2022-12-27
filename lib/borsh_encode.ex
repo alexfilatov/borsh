@@ -5,8 +5,24 @@ defmodule Borsh.Encode do
   ## Usage
 
   ```elixir
+  iex> defmodule DummyStruct do
+  iex>  @type t() :: %__MODULE__{first_name: String.t(), last_name: String.t(), age: integer}
+  iex>
+  iex>  defstruct [
+  iex>    :first_name,
+  iex>    :last_name,
+  iex>    :age
+  iex>  ]
+  iex>
+  iex>  use Borsh,
+  iex>    schema: [
+  iex>      first_name: :string,
+  iex>      last_name: :string,
+  iex>      age: :u8
+  iex>    ]
+  iex> end
   iex> borsh_struct = %DummyStruct{first_name: "Boris", last_name: "Johnson", age: 58}
-  iex> Borsh.Encode.encode(borsh_struct, [a: :string, b: :string, c: :u32])
+  iex> Borsh.Encode.encode(borsh_struct)
   <<5, 0, 0, 0, 66, 111, 114, 105, 115, 7, 0, 0, 0, 74, 111, 104, 110, 115, 111, 110, 58>>
   ```
   """
@@ -14,8 +30,9 @@ defmodule Borsh.Encode do
   @doc """
   Encodes structs according to the schema into the bytestring
   """
-  @spec borsh_encode(obj :: struct, borsh_schema :: keyword) :: bitstring()
-  def borsh_encode(obj, borsh_schema) do
+  @spec borsh_encode(obj :: struct) :: bitstring()
+  def borsh_encode(obj) do
+    borsh_schema = obj.__struct__.borsh_schema()
 
     {_, res} =
       Enum.map_reduce(
