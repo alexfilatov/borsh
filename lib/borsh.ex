@@ -74,7 +74,7 @@ defmodule Borsh do
       """
       @spec borsh_decode(bs :: bitstring()) :: struct()
       def borsh_decode(bs) do
-        Borsh.Decode.borsh_decode(bs)
+        Borsh.Decode.borsh_decode(bs, __MODULE__)
       end
     end
   end

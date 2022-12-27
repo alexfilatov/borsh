@@ -49,4 +49,15 @@ defmodule BorshTest do
       assert age == 58
     end
   end
+
+  @tag timeout: :infinity
+  describe ".borsh_decode" do
+    test "success: decoded into the struct", %{struct: struct} do
+      bitstr = DummyStruct.borsh_encode(struct)
+      assert is_bitstring(bitstr)
+
+      decoded_struct = DummyStruct.borsh_decode(bitstr)
+      assert decoded_struct == struct
+    end
+  end
 end

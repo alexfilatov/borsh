@@ -41,7 +41,7 @@ defmodule Borsh.Decode do
         borsh_schema,
         %{bits: bs, map: struct(borsh_module)},
         fn {schema_field_name, schema_field_type} = schema_item, res_map ->
-          {decoded_result, rest_bits} = decode(res_map.map, res_map.bits, schema_item)
+          {decoded_result, rest_bits} = decode(res_map.bits, schema_field_type)
 
           {
             schema_item,
@@ -53,19 +53,15 @@ defmodule Borsh.Decode do
     res_map.map
   end
 
-  @doc """
-  Decodes string
-  """
-  def decode(map, <<str_size::little-integer-size(32), rest_bits::binary>>, {field_name, :string}) do
+  # string
+  defp decode(<<str_size::little-integer-size(32), rest_bits::binary>>, :string) do
     <<str::binary-size(str_size), rest_bits::binary>> = rest_bits
 
     {str, rest_bits}
   end
 
-  @doc """
-  Decodes unsigned 8-bit integer
-  """
-  def decode(map, <<u8::little-integer-size(8), rest_bits::binary>>, {field_name, :u8}) do
+  # unsigned 8-bit integer
+  defp decode(<<u8::little-integer-size(8), rest_bits::binary>>, :u8) do
     {u8, rest_bits}
   end
 end
