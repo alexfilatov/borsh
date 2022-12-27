@@ -19,7 +19,7 @@ defmodule BorshTest do
   end
 
   setup do
-    struct = %DummyStruct{first_name: "Boris", last_name: "Johnson", age: 14}
+    struct = %DummyStruct{first_name: "Boris", last_name: "Johnson", age: 58}
     {:ok, struct: struct}
   end
 
@@ -46,15 +46,7 @@ defmodule BorshTest do
       <<_::binary-size(4), _::binary-size(5), _::binary-size(4), _::binary-size(7), age::size(8),
         _::binary>> = bitstr
 
-      assert age == 14
-    end
-  end
-
-  @tag :skip
-  describe ".borsh_decode" do
-    test "success: decoded back into struct", %{struct: struct} do
-      bitstr = DummyStruct.borsh_encode(struct)
-      assert DummyStruct.borsh_decode(bitstr) == struct
+      assert age == 58
     end
   end
 end
