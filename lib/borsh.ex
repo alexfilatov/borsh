@@ -68,6 +68,14 @@ defmodule Borsh do
       def borsh_encode(obj) do
         Borsh.Encode.borsh_encode(obj)
       end
+
+      @doc """
+      Decodes objects according to the schema into the the struct
+      """
+      @spec borsh_decode(bs :: bitstring()) :: struct()
+      def borsh_decode(bs) do
+        Borsh.Decode.borsh_decode(bs)
+      end
     end
   end
 end
