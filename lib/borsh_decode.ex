@@ -64,4 +64,49 @@ defmodule Borsh.Decode do
   defp decode(<<u8::little-integer-size(8), rest_bits::binary>>, :u8) do
     {u8, rest_bits}
   end
+
+  # unsigned 16-bit integer
+  defp decode(<<u16::little-integer-size(16), rest_bits::binary>>, :u16) do
+    {u16, rest_bits}
+  end
+
+  # unsigned 32-bit integer
+  defp decode(<<u32::little-integer-size(32), rest_bits::binary>>, :u32) do
+    {u32, rest_bits}
+  end
+
+  # unsigned 64-bit integer
+  defp decode(<<u64::little-integer-size(64), rest_bits::binary>>, :u64) do
+    {u64, rest_bits}
+  end
+
+  # unsigned 128-bit integer
+  defp decode(<<u128::little-integer-size(128), rest_bits::binary>>, :u128) do
+    {u128, rest_bits}
+  end
+
+  # signed 8-bit integer
+  defp decode(<<i8::little-integer-signed-size(8), rest_bits::binary>>, :i8) do
+    {i8, rest_bits}
+  end
+
+  # signed 16-bit integer
+  defp decode(<<i16::little-integer-signed-size(16), rest_bits::binary>>, :i16) do
+    {i16, rest_bits}
+  end
+
+  # signed 32-bit integer
+  defp decode(<<i32::little-integer-signed-size(32), rest_bits::binary>>, :i32) do
+    {i32, rest_bits}
+  end
+
+  # signed 64-bit integer
+  defp decode(<<i64::little-integer-signed-size(64), rest_bits::binary>>, :i64) do
+    {i64, rest_bits}
+  end
+
+  # signed 128-bit integer
+  defp decode(<<i128::little-integer-signed-size(128), rest_bits::binary>>, :i128) do
+    {i128, rest_bits}
+  end
 end

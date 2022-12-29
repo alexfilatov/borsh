@@ -83,8 +83,8 @@ defmodule Borsh.Encode do
     |> encode_item({key, size})
   end
 
-  defp encode_item(value, {key, size}) when size in [:u8, :u16, :u32, :u64, :u128] do
-    size = convert_size(size)
+  defp encode_item(value, {key, size})
+       when size in [:u8, :u16, :u32, :u64, :u128, :i8, :i16, :i32, :i64, :i128] do
     binarify(value, size)
   end
 
@@ -93,19 +93,29 @@ defmodule Borsh.Encode do
     [
       string_value
       |> byte_size()
-      |> binarify(32),
+      |> binarify(:u32),
       string_value
     ]
   end
 
-  defp binarify(int_value, size \\ 32) do
-    <<int_value :: size(size) - integer - unsigned - little>>
+  defp binarify(value, size) when size in [:i8, :i16, :i32, :i64, :i128] do
+    size = convert_size(size)
+    <<value::size(size)-integer-signed-little>>
   end
 
-  defp convert_size(size) do
-    size
-    |> Atom.to_string()
-    |> String.slice(1..3)
-    |> String.to_integer()
+  defp binarify(value, size) when size in [:u8, :u16, :u32, :u64, :u128] do
+    size = convert_size(size)
+    <<value::size(size)-integer-unsigned-little>>
   end
+
+  def convert_size(:u8), do: 8
+  def convert_size(:u16), do: 16
+  def convert_size(:u32), do: 32
+  def convert_size(:u64), do: 64
+  def convert_size(:u128), do: 128
+  def convert_size(:i8), do: 8
+  def convert_size(:i16), do: 16
+  def convert_size(:i32), do: 32
+  def convert_size(:i64), do: 64
+  def convert_size(:i128), do: 128
 end
