@@ -55,7 +55,7 @@ defmodule Borsh.Encode do
     encode_item(value, {key, format})
   end
 
-  defp encode_item(value, {key, format}) when format === [:borsh] do
+  defp encode_item(value, {_key, format}) when format === [:borsh] do
     [
       # 4bytes binary length of the List
       value
@@ -81,12 +81,12 @@ defmodule Borsh.Encode do
 
   # when this is a :borsh type with a struct name
   # we dont need struct name for encoding, but we'll need that for decoding
-  defp encode_item(value, {key, {:borsh, _}}) do
+  defp encode_item(value, {_key, {:borsh, _}}) do
     value.__struct__.borsh_encode(value)
   end
 
   # TODO: add string length validation
-  defp encode_item(value, {key, format}) when format in [[32], [64]], do: value
+  defp encode_item(value, {_key, format}) when format in [[32], [64]], do: value
 
   defp encode_item(value, {key, size})
        when size in [:u8, :u16, :u32, :u64, :u128] and is_binary(value) do
@@ -95,12 +95,12 @@ defmodule Borsh.Encode do
     |> encode_item({key, size})
   end
 
-  defp encode_item(value, {key, size})
+  defp encode_item(value, {_key, size})
        when size in [:u8, :u16, :u32, :u64, :u128, :i8, :i16, :i32, :i64, :i128] do
     binarify(value, size)
   end
 
-  defp encode_item(string_value, {key, :string}) do
+  defp encode_item(string_value, {_key, :string}) do
     # 4 bytes of the string length
     [
       string_value

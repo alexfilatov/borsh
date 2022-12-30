@@ -1,4 +1,5 @@
 defmodule Borsh.Decode do
+  require Logger
   @moduledoc """
   This module contains functions for decoding BORSH binary format into Elixir data structures.
 
