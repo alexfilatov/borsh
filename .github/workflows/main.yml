@@ -9,7 +9,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        otp: [ '25']
+        otp: [ '24.2']
         elixir: [ '1.13' ]
     env:
       MIX_ENV: test
