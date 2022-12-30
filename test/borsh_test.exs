@@ -56,7 +56,7 @@ defmodule BorshTest do
       bitstr = DummyStruct.borsh_encode(struct)
       assert is_bitstring(bitstr)
 
-      decoded_struct = DummyStruct.borsh_decode(bitstr)
+      {decoded_struct, _} = DummyStruct.borsh_decode(bitstr)
       assert decoded_struct == struct
     end
   end

@@ -39,11 +39,14 @@ end
   use Borsh,
       schema: [
         signer_id: :string,
-        public_key: :borsh,
+        public_key: {:borsh, PublicKey},
         nonce: :u64,
         receiver_id: :string,
         block_hash: [32],
-        actions: [:borsh]
+        actions: [
+          {:borsh, ActionOne}, 
+          {:borsh, ActionTwo}
+        ]
       ]
 ```
 
@@ -54,16 +57,33 @@ Borsh schema itself, structure of fields for serialisation with serialisation fo
 
 #### Borsh literal formats
 
-`:string` - String representation of a value. Borsh encodes it as is, with a little-endian 32bit (4 bytes) header of a
-string byte size
+`:string` - string, encoded as utf-8 bytes
 
-`:borsh` - Struct of the borsh-ed module. The serializer will take this struct and executes struct's
-module `.borsh_encode`
-against this struct and assign binary result to the literal.
+`:u8` - unsigned 8-bit integer
 
-`[:borsh]` - Enum of borsh-ed structs. Each element of this list of `:borsh` struct must have a Borsh schema
+`:u16` - unsigned 16-bit integer
 
-`:u64` - Unsigned integer 64-bit size. There are also `:u8`, `:u16`, `:u32` and `:u128`
+`:u32` - unsigned 32-bit integer
+
+`:u64` - unsigned 64-bit integer
+
+`:i8` - signed 8-bit integer
+
+`:i16` - signed 16-bit integer
+
+`:i32` - signed 32-bit integer
+
+`:i64` - signed 64-bit integer
+
+`:f32` - 32-bit float
+
+`:f64` - 64-bit float
+
+`{:borsh, Module}` - Struct of the borsh-ed module. The serializer will take this struct and executes struct's  module `.borsh_encode` against this struct
+`:borsh` - [deprecated] the same as `{:borsh, Module}`, but not possible to decode if used. Works only for encoding.
+
+`[{:borsh, Module}]` - Enum of borsh-ed structs. Each element of this list of `:borsh` struct must have a Borsh schema with a field
+`[:borsh]` - [deprecated] the same as `[{:borsh, Module}]` but  not possible to decode if used. Works only for encoding.
 
 `[32]` or `[64]` - A string with 32/64 chars length.
 

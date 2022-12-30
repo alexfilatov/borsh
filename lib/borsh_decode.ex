@@ -50,7 +50,7 @@ defmodule Borsh.Decode do
         end
       )
 
-    res_map.map
+    {res_map.map, res_map.bits}
   end
 
   # string
@@ -108,5 +108,17 @@ defmodule Borsh.Decode do
   # signed 128-bit integer
   defp decode(<<i128::little-integer-signed-size(128), rest_bits::binary>>, :i128) do
     {i128, rest_bits}
+  end
+
+  # borsh struct
+  defp decode(bits, :borsh) do
+    Logger.error("Cannot decode borsh_struct: #{inspect(bits, pretty: true, limit: 30000)}")
+
+    raise "Cannot decode borsh_struct: #{inspect(bits, pretty: true, limit: 30000)}"
+  end
+
+  # borsh struct
+  defp decode(bits, {:borsh, module}) do
+    module.borsh_decode(bits)
   end
 end

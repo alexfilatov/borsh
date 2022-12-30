@@ -1,4 +1,5 @@
 defmodule Borsh.Encode do
+  require Logger
   @moduledoc """
   This module contains functions for encoding Elixir data structures into BORSH binary format.
 
@@ -69,7 +70,18 @@ defmodule Borsh.Encode do
     ]
   end
 
-  defp encode_item(value, {key, format}) when format === :borsh do
+  # keeping this for backward compatibility, we should use {:borsh, struct} instead of :borsh
+  defp encode_item(value, {key, :borsh}) do
+    Logger.warn(
+      "Using :borsh format is deprecated, please use `#{key}: {:borsh, #{value.__struct__}}` instead of `#{key}: :borsh`"
+    )
+
+    value.__struct__.borsh_encode(value)
+  end
+
+  # when this is a :borsh type with a struct name
+  # we dont need struct name for encoding, but we'll need that for decoding
+  defp encode_item(value, {key, {:borsh, _}}) do
     value.__struct__.borsh_encode(value)
   end
 
