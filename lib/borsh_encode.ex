@@ -56,12 +56,17 @@ defmodule Borsh.Encode do
     encode_item(value, {key, format})
   end
 
-  defp encode_item(value, {_key, format}) when format === [:borsh] do
+  # encoding list of structs
+  defp encode_item(value, {_key, [:borsh]}), do: encode_list(value)
+  defp encode_item(value, {_key, [{:borsh, module}]}), do: encode_list(value)
+  defp encode_item(value, {_key, _}) when is_list(value), do: encode_list(value)
+
+  defp encode_list(value) do
     [
       # 4bytes binary length of the List
       value
       |> length()
-      |> binarify(32),
+      |> binarify(:u32),
       Enum.map(
         value,
         fn i ->
