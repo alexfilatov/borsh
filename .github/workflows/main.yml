@@ -44,9 +44,6 @@ jobs:
           - otp: 24.0
             elixir: 1.12
             coverage: true
-          - otp: 22.0
-            elixir: 1.11
-            coverage: true
     env:
       MIX_ENV: test
     steps:
