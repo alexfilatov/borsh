@@ -1,5 +1,6 @@
 defmodule Borsh.Encode do
   require Logger
+
   @moduledoc """
   This module contains functions for encoding Elixir data structures into BORSH binary format.
 
