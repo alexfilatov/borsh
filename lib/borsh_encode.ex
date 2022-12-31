@@ -58,23 +58,8 @@ defmodule Borsh.Encode do
 
   # encoding list of structs
   defp encode_item(value, {_key, [:borsh]}), do: encode_list(value)
-  defp encode_item(value, {_key, [{:borsh, module}]}), do: encode_list(value)
+  defp encode_item(value, {_key, [{:borsh, _module}]}), do: encode_list(value)
   defp encode_item(value, {_key, _}) when is_list(value), do: encode_list(value)
-
-  defp encode_list(value) do
-    [
-      # 4bytes binary length of the List
-      value
-      |> length()
-      |> binarify(:u32),
-      Enum.map(
-        value,
-        fn i ->
-          i.__struct__.borsh_encode(i)
-        end
-      )
-    ]
-  end
 
   # keeping this for backward compatibility, we should use {:borsh, struct} instead of :borsh
   defp encode_item(value, {key, :borsh}) do
@@ -113,6 +98,21 @@ defmodule Borsh.Encode do
       |> byte_size()
       |> binarify(:u32),
       string_value
+    ]
+  end
+
+  defp encode_list(value) do
+    [
+      # 4bytes binary length of the List
+      value
+      |> length()
+      |> binarify(:u32),
+      Enum.map(
+        value,
+        fn i ->
+          i.__struct__.borsh_encode(i)
+        end
+      )
     ]
   end
 

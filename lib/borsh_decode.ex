@@ -139,7 +139,7 @@ defmodule Borsh.Decode do
   defp decode(bits, l, acc \\ [])
   defp decode(bits, [], acc), do: {Enum.reverse(acc), bits}
 
-  defp decode(<<len::little-integer-signed-size(32), bits::binary>>, [{:borsh, module} | t], []) do
+  defp decode(<<_len::little-integer-signed-size(32), bits::binary>>, [{:borsh, module} | t], []) do
     {struct, rest_bits} = decode(bits, {:borsh, module})
     decode(rest_bits, t, [struct])
   end
