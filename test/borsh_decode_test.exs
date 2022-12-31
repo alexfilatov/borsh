@@ -25,6 +25,18 @@ defmodule Borsh.DecodeTest do
       ]
   end
 
+  defmodule DogStruct do
+    @type t() :: %__MODULE__{name: String.t()}
+    defstruct [:name]
+    use Borsh, schema: [name: :string]
+  end
+
+  defmodule CatStruct do
+    @type t() :: %__MODULE__{name: String.t()}
+    defstruct [:name]
+    use Borsh, schema: [name: :string]
+  end
+
   defmodule ParentStruct do
     @type t() :: %__MODULE__{
             first_name: String.t(),
@@ -40,6 +52,9 @@ defmodule Borsh.DecodeTest do
             var_i64: integer,
             var_i128: integer,
             son: ChildStruct.t(),
+            daughter: ChildStruct.t(),
+            children: list(ChildStruct.t()),
+            pets: list(any),
             test_value: integer
           }
 
@@ -57,6 +72,9 @@ defmodule Borsh.DecodeTest do
       :var_i64,
       :var_i128,
       :son,
+      :daughter,
+      :children,
+      :pets,
       :test_value
     ]
 
@@ -75,6 +93,10 @@ defmodule Borsh.DecodeTest do
         var_i64: :i64,
         var_i128: :i128,
         son: {:borsh, ChildStruct},
+        daughter: {:borsh, ChildStruct},
+        # this only limitation is we cannot use arrays of different types
+        children: [{:borsh, ChildStruct}],
+        pets: [{:borsh, DogStruct}, {:borsh, CatStruct}],
         test_value: :u16
       ]
   end
@@ -94,6 +116,12 @@ defmodule Borsh.DecodeTest do
       var_i64: -1_000_000_000,
       var_i128: -1_000_000_000_000_000_000,
       son: %ChildStruct{first_name: "Alex", hello: "world", age: 12, world: 4},
+      daughter: %ChildStruct{first_name: "Kate", hello: "hi", age: 10, world: 6},
+      children: [
+        %ChildStruct{first_name: "Alex", hello: "world", age: 12, world: 4},
+        %ChildStruct{first_name: "Kate", hello: "hi", age: 10, world: 6}
+      ],
+      pets: [%DogStruct{name: "Rex"}, %CatStruct{name: "Molly"}],
       test_value: 45
     }
 

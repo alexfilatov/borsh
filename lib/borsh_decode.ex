@@ -123,4 +123,29 @@ defmodule Borsh.Decode do
   defp decode(bits, {:borsh, module}) do
     module.borsh_decode(bits)
   end
+
+  # list of borsh structs of the same type
+  defp decode(<<len::little-integer-signed-size(32), bits::binary>>, [{:borsh, module}]) do
+    {structs, rest_bits} =
+      Enum.reduce(1..len, {[], bits}, fn _, {structs, rest} ->
+        {struct, rest_bits} = decode(rest, {:borsh, module})
+        {[struct | structs], rest_bits}
+      end)
+
+    {Enum.reverse(structs), rest_bits}
+  end
+
+  # list of borsh structs of any type
+  defp decode(bits, l, acc \\ [])
+  defp decode(bits, [], acc), do: {Enum.reverse(acc), bits}
+
+  defp decode(<<len::little-integer-signed-size(32), bits::binary>>, [{:borsh, module} | t], []) do
+    {struct, rest_bits} = decode(bits, {:borsh, module})
+    decode(rest_bits, t, [struct])
+  end
+
+  defp decode(bits, [{:borsh, module} | t], acc) do
+    {struct, rest_bits} = decode(bits, {:borsh, module})
+    decode(rest_bits, t, [struct | acc])
+  end
 end
