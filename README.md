@@ -2,23 +2,22 @@
 
 BORSH, binary serializer for security-critical projects.
 
-**IMPORTANT! Implemented only `Serialization`. `Deserialization` will be implemented by the end of the March.**
+Borsh stands for "Binary Object Representation Serializer for Hashing".
+It is meant to be used in security-critical projects as it prioritizes consistency, safety, speed;
+and comes with a strict specification.
+In short, Borsh is a non self-describing binary serialization format.
+It is designed to serialize any objects to canonical and deterministic set of bytes.
 
-Borsh stands for `Binary` `Object` `Representation` `Serializer` for `Hashing`. It is meant to be used in
-security-critical projects as it prioritizes consistency, safety, speed; and comes with a strict specification.
+General principles of Borsh serialization:
 
-In short, Borsh is a non self-describing binary serialization format. It is designed to serialize any objects to
-canonical and deterministic set of bytes.
+- Integers are encoded in little-endian format.
+- The size of dynamic containers (such as hash maps and hash sets) is written as a 32-bit unsigned integer before the values.
+- All unordered containers are ordered lexicographically by key, with a tie breaker of the value.
+- Structs are serialized in the order of their fields.
+- Enums are serialized by storing the ordinal as an 8-bit unsigned integer, followed by the data contained within the enum value (if present).
 
-General principles:
-
-- integers are little endian;
-- sizes of dynamic containers are written before values as u32;
-- all unordered containers (hashmap/hashset) are ordered in lexicographic order by key (in tie breaker case on value);
-- structs are serialized in the order of fields in the struct;
-- enums are serialized with using u8 for the enum ordinal and then storing data inside the enum value (if present).
-
-This is Elixir implementation of the serializer. Official specification: https://github.com/near/borsh#specification
+This is Elixir implementation of the Borsh serializer and deserializer.
+Official specification: https://github.com/near/borsh#specification
 
 ## Installation
 
