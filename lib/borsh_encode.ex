@@ -3,34 +3,33 @@ defmodule Borsh.Encode do
 
   @moduledoc """
   This module contains functions for encoding Elixir data structures into BORSH binary format.
-
   ## Usage
 
   ```elixir
-  iex> defmodule DummyStruct do
-  iex>  @type t() :: %__MODULE__{first_name: String.t(), last_name: String.t(), age: integer}
-  iex>
-  iex>  defstruct [
-  iex>    :first_name,
-  iex>    :last_name,
-  iex>    :age
-  iex>  ]
-  iex>
-  iex>  use Borsh,
-  iex>    schema: [
-  iex>      first_name: :string,
-  iex>      last_name: :string,
-  iex>      age: :u8
-  iex>    ]
-  iex> end
-  iex> borsh_struct = %DummyStruct{first_name: "Boris", last_name: "Johnson", age: 58}
-  iex> Borsh.Encode.encode(borsh_struct)
+  defmodule ParentStruct do
+   @type t() :: %__MODULE__{first_name: String.t(), last_name: String.t(), age: integer}
+
+   defstruct [
+     :first_name,
+     :last_name,
+     :age
+   ]
+
+   use Borsh,
+     schema: [
+       first_name: :string,
+       last_name: :string,
+       age: :u8
+     ]
+  end
+  borsh_struct = %ParentStruct{first_name: "Boris", last_name: "Johnson", age: 58}
+  Borsh.Encode.encode(borsh_struct)
   <<5, 0, 0, 0, 66, 111, 114, 105, 115, 7, 0, 0, 0, 74, 111, 104, 110, 115, 111, 110, 58>>
   ```
   """
 
   @doc """
-  Encodes structs according to the schema into the bytestring
+  Encodes structs according to the schema into the bitstring
   """
   @spec borsh_encode(obj :: struct) :: bitstring()
   def borsh_encode(obj) do
@@ -94,9 +93,9 @@ defmodule Borsh.Encode do
   defp encode_item(string_value, {_key, :string}) do
     # 4 bytes of the string length
     [
-      string_value
-      |> byte_size()
-      |> binarify(:u32),
+      # 32-bits string length,
+      string_value |> byte_size() |> binarify(:u32),
+      # string itself
       string_value
     ]
   end
@@ -104,26 +103,20 @@ defmodule Borsh.Encode do
   defp encode_list(value) do
     [
       # 4bytes binary length of the List
-      value
-      |> length()
-      |> binarify(:u32),
-      Enum.map(
-        value,
-        fn i ->
-          i.__struct__.borsh_encode(i)
-        end
-      )
+      value |> length() |> binarify(:u32),
+      # encode each item in the list
+      Enum.map(value, fn i -> i.__struct__.borsh_encode(i) end)
     ]
   end
 
   defp binarify(value, size) when size in [:i8, :i16, :i32, :i64, :i128] do
     size = convert_size(size)
-    <<value::size(size)-integer-signed-little>>
+    <<value::little-signed-integer-size(size)>>
   end
 
   defp binarify(value, size) when size in [:u8, :u16, :u32, :u64, :u128] do
     size = convert_size(size)
-    <<value::size(size)-integer-unsigned-little>>
+    <<value::little-unsigned-integer-size(size)>>
   end
 
   def convert_size(:u8), do: 8

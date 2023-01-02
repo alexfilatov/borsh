@@ -80,10 +80,10 @@ Borsh schema itself, structure of fields for serialisation with serialisation fo
 `:f64` - 64-bit float
 
 `{:borsh, Module}` - Struct of the borsh-ed module. The serializer will take this struct and executes struct's  module `.borsh_encode` against this struct
-`:borsh` - [deprecated] the same as `{:borsh, Module}`, but not possible to decode if used. Works only for encoding.
+`:borsh` - The same as `{:borsh, Module}`, but not possible to decode if used. Could be used only for encoding.
 
 `[{:borsh, Module}]` - Enum of borsh-ed structs. Each element of this list of `:borsh` struct must have a Borsh schema with a field
-`[:borsh]` - [deprecated] the same as `[{:borsh, Module}]` but  not possible to decode if used. Works only for encoding.
+`[:borsh]` - The same as `[{:borsh, Module}]` but not possible to decode if used. Works only for encoding.
 
 `[32]` or `[64]` - A string with 32/64 chars length.
 

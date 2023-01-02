@@ -2,12 +2,20 @@ defmodule Borsh.Decode do
   require Logger
 
   @moduledoc """
-  This module contains functions for decoding BORSH binary format into Elixir data structures.
+  The `Borsh.Decode` module provides functions for decoding data serialized using the Borsh format.
+  It defines functions for each supported data type (e.g. `:string`, `:u8`, `:i64`) that can be used
+  to decode a value of that type from a given bitstring.
+
+  The primary function in this module is `borsh_decode`, which takes a bitstring and the name of a
+  Borsh-serialized module as arguments. It retrieves the schema for the module and uses it to decode the
+  data contained in the bitstring. The resulting data is returned as a struct of the module.
 
   ## Usage
 
+  As an example let's use the following struct previuosly serialised into borsh bitstring.
+
   ```elixir
-  defmodule DummyStruct do
+  defmodule ParentStruct do
    @type t() :: %__MODULE__{first_name: String.t(), last_name: String.t(), age: integer}
 
    defstruct [
@@ -23,11 +31,16 @@ defmodule Borsh.Decode do
        age: :u8
      ]
   end
+  ```
 
+  To use the `Borsh.Decode` module, you can pass a bitstring and the name of a
+  Borsh-serialized struct to the `borsh_decode` function. For example:
+
+  ```elixir
   bitstr = <<5, 0, 0, 0, 66, 111, 114, 105, 115, 7, 0, 0, 0, 74, 111, 104, 110, 115, 111, 110, 58>>
 
-  Borsh.Decode.borsh_decode(bitstr, DummyStruct)
-  %DummyStruct{first_name: "Boris", last_name: "Johnson", age: 58}
+  Borsh.Decode.borsh_decode(bitstr, ParentStruct)
+  %ParentStruct{first_name: "Boris", last_name: "Johnson", age: 58}
   ```
   """
 

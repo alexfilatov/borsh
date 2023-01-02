@@ -1,7 +1,7 @@
 defmodule BorshTest do
   use ExUnit.Case
 
-  defmodule DummyStruct do
+  defmodule ParentStruct do
     @type t() :: %__MODULE__{first_name: String.t(), last_name: String.t(), age: integer}
 
     defstruct [
@@ -19,13 +19,13 @@ defmodule BorshTest do
   end
 
   setup do
-    struct = %DummyStruct{first_name: "Boris", last_name: "Johnson", age: 58}
+    struct = %ParentStruct{first_name: "Boris", last_name: "Johnson", age: 58}
     {:ok, struct: struct}
   end
 
   describe ".borsh_encode" do
     test "success: encoded into bitstring", %{struct: struct} do
-      bitstr = DummyStruct.borsh_encode(struct)
+      bitstr = ParentStruct.borsh_encode(struct)
 
       assert is_bitstring(bitstr)
 
@@ -53,10 +53,10 @@ defmodule BorshTest do
   @tag timeout: :infinity
   describe ".borsh_decode" do
     test "success: decoded into the struct", %{struct: struct} do
-      bitstr = DummyStruct.borsh_encode(struct)
+      bitstr = ParentStruct.borsh_encode(struct)
       assert is_bitstring(bitstr)
 
-      {decoded_struct, _} = DummyStruct.borsh_decode(bitstr)
+      {decoded_struct, _} = ParentStruct.borsh_decode(bitstr)
       assert decoded_struct == struct
     end
   end
