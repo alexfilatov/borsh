@@ -75,8 +75,20 @@ defmodule Borsh.Encode do
     value.__struct__.borsh_encode(value)
   end
 
-  # TODO: add string length validation
-  defp encode_item(value, {_key, format}) when format in [[32], [64]], do: value
+  # encoding strings with fixed sizes: 32 bytes and 64 bytes, types `[32]` and `[64]` respectively:
+  defp encode_item(<<_::size(256)>> = string_value, {_key, [32]}) do
+    encode_item(string_value, {_key, :string})
+  end
+
+  defp encode_item(_value, {key, [32]}),
+    do: raise("Invalid string length for `#{key}`, must be 32 bytes")
+
+  defp encode_item(<<_::size(512)>> = string_value, {_key, [64]}) do
+    encode_item(string_value, {_key, :string})
+  end
+
+  defp encode_item(_value, {key, [64]}),
+    do: raise("Invalid string length for `#{key}`, must be 64 bytes")
 
   defp encode_item(value, {key, size})
        when size in [:u8, :u16, :u32, :u64, :u128] and is_binary(value) do

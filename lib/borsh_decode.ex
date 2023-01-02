@@ -69,7 +69,8 @@ defmodule Borsh.Decode do
   end
 
   # string
-  defp decode(<<str_size::little-integer-size(32), rest_bits::binary>>, :string) do
+  defp decode(<<str_size::little-integer-size(32), rest_bits::binary>>, format)
+       when format in [:string, [32], [64]] do
     <<str::binary-size(str_size), rest_bits::binary>> = rest_bits
 
     {str, rest_bits}

@@ -55,7 +55,8 @@ defmodule Borsh.DecodeTest do
             daughter: ChildStruct.t(),
             children: list(ChildStruct.t()),
             pets: list(any),
-            test_value: integer
+            test_value: integer,
+            hash_string: String.t(),
           }
 
     defstruct [
@@ -75,7 +76,8 @@ defmodule Borsh.DecodeTest do
       :daughter,
       :children,
       :pets,
-      :test_value
+      :test_value,
+      :hash_string
     ]
 
     use Borsh,
@@ -97,7 +99,8 @@ defmodule Borsh.DecodeTest do
         # this only limitation is we cannot use arrays of different types
         children: [{:borsh, ChildStruct}],
         pets: [{:borsh, DogStruct}, {:borsh, CatStruct}],
-        test_value: :u16
+        test_value: :u16,
+        hash_string: [32]
       ]
   end
 
@@ -122,7 +125,8 @@ defmodule Borsh.DecodeTest do
         %ChildStruct{first_name: "Kate", hello: "hi", age: 10, world: 6}
       ],
       pets: [%DogStruct{name: "Rex"}, %CatStruct{name: "Molly"}],
-      test_value: 45
+      test_value: 45,
+      hash_string: "12345678901234567890123456789012"
     }
 
     {:ok, struct: struct}
