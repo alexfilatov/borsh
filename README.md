@@ -11,13 +11,18 @@ It is designed to serialize any objects to canonical and deterministic set of by
 General principles of Borsh serialization:
 
 - Integers are encoded in little-endian format.
-- The size of dynamic containers (such as hash maps and hash sets) is written as a 32-bit unsigned integer before the values.
+- The size of dynamic containers (such as hash maps and hash sets) is written as a 32-bit unsigned integer before the
+  values.
 - All unordered containers are ordered lexicographically by key, with a tie breaker of the value.
 - Structs are serialized in the order of their fields.
-- Enums are serialized by storing the ordinal as an 8-bit unsigned integer, followed by the data contained within the enum value (if present).
+- Enums are serialized by storing the ordinal as an 8-bit unsigned integer, followed by the data contained within the
+  enum value (if present).
 
 This is Elixir implementation of the Borsh serializer and deserializer.
 Official specification: https://github.com/near/borsh#specification
+
+A little article on Medium about Borsh serializer in more
+details: https://medium.com/@alexfilatov/borsh-binary-serialiser-for-near-protocol-eed79a1638f4
 
 ## Installation
 
@@ -49,10 +54,11 @@ end
       ]
 ```
 
+In this example `ActionOne`, `ActionTwo` and `PublicKey` are structs that implement `Borsh` protocol.
+
 ### Options
 
-`schema`:
-Borsh schema itself, structure of fields for serialisation with serialisation formats.
+`schema`: Borsh schema itself, structure of fields for serialisation with serialisation formats described below.
 
 ### Borsh literal formats
 
@@ -87,7 +93,7 @@ Borsh schema itself, structure of fields for serialisation with serialisation fo
 #### Borsh-typed literals
 
 To define custom types for serialization, we can use the syntax `{:borsh, StructModule}` in a parent struct, when we
-want to serialize another struct within it. There are single and arrays of borsh types. 
+want to serialize another struct within it. There are single and arrays of borsh types.
 
 `{:borsh, Module}` - The syntax represents a single struct of a borsh-encoded module. When this struct is passed to the
 serializer, the serializer will execute the `.borsh_encode` method of the struct's module on the struct.
