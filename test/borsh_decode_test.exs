@@ -56,7 +56,7 @@ defmodule Borsh.DecodeTest do
             children: list(ChildStruct.t()),
             pets: list(any),
             test_value: integer,
-            hash_string: String.t(),
+            hash_string: String.t()
           }
 
     defstruct [
