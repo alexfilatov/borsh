@@ -76,15 +76,15 @@ defmodule Borsh.Encode do
   end
 
   # encoding strings with fixed sizes: 32 bytes and 64 bytes, types `[32]` and `[64]` respectively:
-  defp encode_item(<<_::size(256)>> = string_value, {_key, [32]}) do
-    encode_item(string_value, {_key, :string})
+  defp encode_item(<<_::size(256)>> = string_value, {key, [32]}) do
+    encode_item(string_value, {key, :string})
   end
 
   defp encode_item(_value, {key, [32]}),
     do: raise("Invalid string length for `#{key}`, must be 32 bytes")
 
-  defp encode_item(<<_::size(512)>> = string_value, {_key, [64]}) do
-    encode_item(string_value, {_key, :string})
+  defp encode_item(<<_::size(512)>> = string_value, {key, [64]}) do
+    encode_item(string_value, {key, :string})
   end
 
   defp encode_item(_value, {key, [64]}),
