@@ -50,14 +50,20 @@ end
       ]
 ```
 
-#### Options
+### Options
 
 `schema`:
 Borsh schema itself, structure of fields for serialisation with serialisation formats.
 
-#### Borsh literal formats
+### Borsh literal formats
+
+#### String literals
 
 `:string` - string, encoded as utf-8 bytes
+
+`[32]` and `[64]` - A string with 32/64 chars length.
+
+#### Number literals
 
 `:u8` - unsigned 8-bit integer
 
@@ -79,13 +85,27 @@ Borsh schema itself, structure of fields for serialisation with serialisation fo
 
 `:f64` - 64-bit float
 
-`{:borsh, Module}` - Struct of the borsh-ed module. The serializer will take this struct and executes struct's  module `.borsh_encode` against this struct
-`:borsh` - The same as `{:borsh, Module}`, but not possible to decode if used. Could be used only for encoding.
+#### Borsh-typed literals
 
-`[{:borsh, Module}]` - Enum of borsh-ed structs. Each element of this list of `:borsh` struct must have a Borsh schema with a field
-`[:borsh]` - The same as `[{:borsh, Module}]` but not possible to decode if used. Works only for encoding.
+To define custom types for serialization, we can use the syntax `{:borsh, StructModule}` in a parent struct, when we
+want to serialize another struct within it. There are single and arrays of borsh types. 
 
-`[32]` or `[64]` - A string with 32/64 chars length.
+`{:borsh, Module}` - The syntax represents a single struct of a borsh-encoded module. When this struct is passed to the
+serializer, the serializer will execute the `.borsh_encode` method of the struct's module on the struct.
+
+`:borsh` - has the same effect as `{:borsh, Module}`, but the resulting serialized data cannot be decoded back into the
+original struct. Using `:borsh` for serialization is safe for sending transactions to the NEAR blockchain, as the main
+concern is just the serialization itself.
+
+`[{:borsh, Module}]` - represents an enumeration of borsh-encoded structs, where each element of the list must have a
+Borsh schema.
+
+`[:borsh]` - has the same effect as [{:borsh, Module}], but the resulting serialized data cannot be decoded back into
+the original structs. It can only be used for encoding, not decoding.
+
+`[{:borsh, Module1}, {:borsh, Module2}]` - represents an enumeration of borsh-encoded structs, where each element
+of the list must have a Borsh schema. Each element in the list can belong to a different module, and the sequence of
+elements is important. This syntax can be used for both encoding and decoding.
 
 ## License
 
